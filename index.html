@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Jordle</h1>
+    <p class="subtitle">The J-Word Wordle</p>
+  </header>
+
+  <div id="board">
+    <div class="row" data-row="0">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+    <div class="row" data-row="1">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+    <div class="row" data-row="2">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+    <div class="row" data-row="3">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+    <div class="row" data-row="4">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+    <div class="row" data-row="5">
+      <div class="tile" data-col="0"></div>
+      <div class="tile" data-col="1"></div>
+      <div class="tile" data-col="2"></div>
+      <div class="tile" data-col="3"></div>
+      <div class="tile" data-col="4"></div>
+    </div>
+  </div>
+
+  <div id="keyboard">
+    <div class="kb-row">
+      <button data-key="Q">Q</button><button data-key="W">W</button>
+      <button data-key="E">E</button><button data-key="R">R</button>
+      <button data-key="T">T</button><button data-key="Y">Y</button>
+      <button data-key="U">U</button data-key>
+      <button data-key="I">I</button><button data-key="O">O</button>
+      <button data-key="P">P</button>
+    </div>
+    <div class="kb-row">
+      <div class="spacer half"></div>
+      <button data-key="A">A</button><button data-key="S">S</button>
+      <button data-key="D">D</button><button data-key="F">F</button>
+      <button data-key="G">G</button><button data-key="H">H</button>
+      <button data-key="J" class="key-j">J</button><button data-key="K">K</button>
+      <button data-key="L">L</button>
+      <div class="spacer half"></div>
+    </div>
+    <div class="kb-row">
+      <button data-key="ENTER" class="wide">ENTER</button>
+      <button data-key="Z">Z</button><button data-key="X">X</button>
+      <button data-key="C">C</button><button data-key="V">V</button>
+      <button data-key="B">B</button><button data-key="N">N</button>
+      <button data-key="M">M</button>
+      <button data-key="BACK" class="wide">&#9003;</button>
+    </div>
+  </div>
+
+  <div id="stats-bar">
+    <span id="streak-display">Streak: 0</span>
+    <span id="max-streak-display">Max: 0</span>
+    <button id="help-btn">?</button>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden"></div>
+
+  <!-- Win/Lose Modal -->
+  <div id="modal-overlay" class="hidden">
+    <div id="modal">
+      <h2 id="modal-title"></h2>
+      <p id="modal-word"></p>
+      <div id="modal-stats">
+        <div class="stat-box"><span id="stat-played">0</span><label>Played</label></div>
+        <div class="stat-box"><span id="stat-win">0</span><label>Win %</label></div>
+        <div class="stat-box"><span id="stat-streak">0</span><label>Streak</label></div>
+        <div class="stat-box"><span id="stat-max">0</span><label>Max Streak</label></div>
+      </div>
+      <div id="modal-share"></div>
+      <div class="modal-buttons">
+        <button id="share-btn">Share</button>
+        <button id="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="help-overlay" class="hidden">
+    <div id="help-modal">
+      <h2>How To Play</h2>
+      <p>Guess the JORDLE in 6 tries.</p>
+      <p>Every answer is a 5-letter word that starts with <strong>J</strong>.</p>
+      <div class="examples">
+        <div class="example-row">
+          <div class="tile mini correct">J</div><div class="tile mini absent">U</div>
+          <div class="tile mini present">M</div><div class="tile mini absent">P</div>
+          <div class="tile mini absent">S</div>
+        </div>
+        <p><span class="correct-text">J</span> is in the word and in the correct spot.<br>
+        <span class="present-text">M</span> is in the word but in the wrong spot.<br>
+        <span class="absent-text">U, P, S</span> are not in the word.</p>
+      </div>
+      <p>A new J-word is available every day at midnight!</p>
+      <button id="help-close-btn">Got it!</button>
+    </div>
+  </div>
+</div>
+
+<script src="wordlist.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
