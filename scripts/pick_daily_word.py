@@ -9,14 +9,16 @@ def main():
     with open('wordlist.js', 'r') as f:
         content = f.read()
 
-    # Extract words from UNIQUE_ANSWERS array
-    match = re.search(r'UNIQUE_ANSWERS\s*=\s*\[([^\]]+)\]', content)
+    # Extract words from ANSWER_POOL array (UNIQUE_ANSWERS is a JS expression,
+    # not a literal array, so we can't regex-match it from Python)
+    match = re.search(r'ANSWER_POOL\s*=\s*\[([^\]]+)\]', content)
     if not match:
-        raise ValueError("Could not find UNIQUE_ANSWERS in wordlist.js")
+        raise ValueError("Could not find ANSWER_POOL in wordlist.js")
 
     words_str = match.group(1)
     words = [w.strip().strip('"').strip("'") for w in words_str.split(',') if w.strip()]
-    words = [w for w in words if len(w) == 5]
+    # Replicate the JS: filter to 5-letter words, then deduplicate (like [...new Set()])
+    words = list(dict.fromkeys(w for w in words if len(w) == 5))
 
     if not words:
         raise ValueError("No valid 5-letter J-words found in answer pool")
