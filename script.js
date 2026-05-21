@@ -28,20 +28,25 @@ function loadState() {
     return stored;
   }
 
-  // New day - check if yesterday was won to maintain streak
-  const stats = loadStats();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yKey = yesterday.getFullYear() + '-' + String(yesterday.getMonth()+1).padStart(2,'0') + '-' + String(yesterday.getDate()).padStart(2,'0');
+ // New day - handle streak continuity
+ const stats = loadStats();
+ const yesterday = new Date();
+ yesterday.setDate(yesterday.getDate() - 1);
+ const yKey = yesterday.getFullYear() + '-' + String(yesterday.getMonth()+1).padStart(2,'0') + '-' + String(yesterday.getDate()).padStart(2,'0');
 
-  if (stored.dateKey === yKey && stored.gameStatus === 'won') {
-    // streak continues naturally
-  } else if (stored.dateKey !== yKey && stored.gameStatus !== 'won') {
-    // missed a day - streak will be reset when we start new game
-  }
+ // Streak only continues if yesterday was played AND won
+ if (stored.dateKey === yKey && stored.gameStatus === 'won') {
+ // streak continues naturally — player won yesterday
+ } else {
+ // Either: lost yesterday, or skipped a day — streak resets to 0
+ if (stats.streak > 0) {
+ stats.streak = 0;
+ saveStats(stats);
+ }
+ }
 
-  // Return fresh state for new day
-  return { dateKey: todayKey, guesses: [], gameStatus: 'playing' };
+ // Return fresh state for new day
+ return { dateKey: todayKey, guesses: [], gameStatus: 'playing' };
 }
 
 function saveState(state) {
@@ -396,7 +401,7 @@ function shareResult() {
     return eval_.map(s => s === 'correct' ? '\ud83d\udfe9' : s === 'present' ? '\ud83d\udfe8' : '\u2b1b\ufe0f').join('');
   }).join('\n');
 
-  const dayNum = Math.floor((new Date() - new Date('2025-01-01')) / (1000 * 60 * 60 * 24));
+  const dayNum = Math.floor((Date.now() - new Date('2025-01-01T00:00:00Z').getTime()) / (1000 * 60 * 60 * 24)) + 1;
   const text = `Jordle #${dayNum} ${guesses.length}/${MAX_GUESSES}\n\n${emojiGrid}`;
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
